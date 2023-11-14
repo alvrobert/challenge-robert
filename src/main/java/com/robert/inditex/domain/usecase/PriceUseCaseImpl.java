@@ -1,5 +1,6 @@
 package com.robert.inditex.domain.usecase;
 
+import com.robert.inditex.domain.exception.PriceNotFoundException;
 import com.robert.inditex.domain.model.Price;
 
 import com.robert.inditex.domain.repository.PriceRepository;
@@ -20,6 +21,11 @@ public class PriceUseCaseImpl implements PriceUseCase{
 
     @Override
     public Price getPrice(LocalDateTime applicationDate, Long productId, Long brandId) {
-        return priceRepository.getPrice(applicationDate, productId, brandId);
+        try{
+            return priceRepository.getPrice(applicationDate, productId, brandId);
+        } catch (Exception ex) {
+            throw new PriceNotFoundException("Error al obtener el precio para brandId: " + brandId +
+                    ", productId: " + productId + " y dateTime: " + applicationDate, ex);
+        }
     }
 }
